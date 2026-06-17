@@ -87,12 +87,14 @@ For each session object in the JSON array, present it to the user clearly:
 - First prompt: "[firstPrompt]"
 
 Then ask **two questions** (one at a time):
-1. What was the task for this session? (one-line description)
-2. How long would this have taken without AI? (e.g. `30m`, `2h`, `half a day`)
+1. What was the task for this session? (one-line description — or type **skip** to exclude this session from the log)
+2. If not skipped: How long would this have taken without AI? (e.g. `30m`, `2h`, `half a day`)
+
+If the user answers "skip" (or "s", "ignore", "personal", "exclude") to Q1, do not include this session in the entries and move to the next session.
 
 Wait for both answers before moving to the next session.
 
-Hold all answers in memory. Build a list of entry objects in this shape:
+Hold all answers in memory. Build a list of entry objects in this shape (skipped sessions are not included):
 ```json
 [
   {
