@@ -1,5 +1,10 @@
 # AI Time Logger — Claude Code Skill
 
+> **Archived.** This skill has moved into [AI-Run_UK-Retailer](https://github.com/RalphGreen123/AI-Run_UK-Retailer).
+> Install from there — see [`docs/setup.md`](https://github.com/RalphGreen123/AI-Run_UK-Retailer/blob/main/docs/setup.md) Step 6 for instructions.
+
+---
+
 Track how long you spend working with AI each day, and estimate the time saved vs doing the same work without it. Logs to a local daily file and a shared consolidated Markdown table your whole team can contribute to.
 
 ## What it does
