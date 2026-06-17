@@ -31,7 +31,7 @@ Track how long you spend working with AI each day, and estimate the time saved v
 Clone the repo **directly into your Claude Code skills directory** — this is important because the shared log lives in the repo itself:
 
 ```bash
-git clone https://github.com/<your-username>/ai-time-logger ~/.claude/skills/ai-time-logger
+git clone https://github.com/RalphGreen123/ai-time-logger ~/.claude/skills/ai-time-logger
 ```
 
 Then set up your personal config:
@@ -84,7 +84,26 @@ Claude will walk you through naming each session and estimating non-AI time, the
 
 ## Team setup
 
-Each team member installs the skill individually and points `consolidatedLogPath` at the same shared file (e.g. a OneDrive or SharePoint folder everyone can access). Each person's rows are appended to the same table. The file is plain Markdown — anyone can edit it directly.
+Each team member installs the skill by cloning the same repo. The consolidated log (`logs/ai-time-log.md`) lives in the repo — everyone appends to it via git pull/push, so all rows accumulate in one place.
+
+**For each team member:**
+
+1. Clone the repo into the Claude Code skills directory:
+   ```bash
+   git clone https://github.com/RalphGreen123/ai-time-logger ~/.claude/skills/ai-time-logger
+   ```
+
+2. Set up personal config:
+   ```bash
+   cp ~/.claude/skills/ai-time-logger/config.example.json ~/.ai-time-logger.json
+   ```
+   Edit `~/.ai-time-logger.json` — set `userName`, `role`, and optionally `dailyLogDir`.
+
+3. Restart Claude Code.
+
+**GitHub access:** Team members need read/write access to `https://github.com/RalphGreen123/ai-time-logger` to push their log entries. Add them as collaborators in GitHub repo settings.
+
+**Windows users:** Use full Windows paths in config, e.g. `C:\\Users\\yourname\\...`
 
 ## How active time is calculated
 
