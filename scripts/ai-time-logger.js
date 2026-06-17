@@ -159,6 +159,14 @@ function writeCmd(opts) {
   // --consolidated CLI flag overrides config (used by SKILL.md for Git repo mode)
   const consolidatedLogPath = opts.consolidated || config.consolidatedLogPath;
 
+  if (!dailyLogDir && !consolidatedLogPath) {
+    process.stderr.write(
+      'Warning: neither dailyLogDir nor consolidatedLogPath is configured — no log will be written.\n' +
+      'Set at least one in ~/.ai-time-logger.json.\n'
+    );
+    process.exit(1);
+  }
+
   const TABLE_HEADER = '| Name | Tool | User Story | Task | Explanation | Role | Helped With | AI Time | Non-AI Time | Date |';
   const TABLE_SEP    = '|------|------|------------|------|-------------|------|-------------|---------|-------------|------|';
 
