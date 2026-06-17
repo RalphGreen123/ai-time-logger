@@ -1,5 +1,6 @@
 {
   "userName": "Your Name",
+  "role": "Dev",
   "useGitRepo": true,
   "dailyLogDir": "/full/path/to/your/local/ai-logs",
   "idleThresholdMinutes": 15

@@ -86,21 +86,63 @@ For each session object in the JSON array, present it to the user clearly:
 - Active AI time: [aiTime]
 - First prompt: "[firstPrompt]"
 
-Then ask **two questions** (one at a time):
-1. What was the task for this session? (one-line description — or type **skip** to exclude this session from the log)
-2. If not skipped: How long would this have taken without AI? (e.g. `30m`, `2h`, `half a day`)
+Ask the following questions **one at a time**:
 
-If the user answers "skip" (or "s", "ignore", "personal", "exclude") to Q1, do not include this session in the entries and move to the next session.
+**Q1 — Task** (one-line description — or type **skip** to exclude this session)
+If the user answers "skip" / "s" / "ignore" / "personal" / "exclude", do not include this session and move to the next.
 
-Wait for both answers before moving to the next session.
+**Q2 — User Story No.**
+e.g. `DIGIX-86186`. If none, type `N/A`.
+
+**Q3 — Which AI tool?**
+Present as a numbered list:
+1. GitHub Copilot
+2. EPAM Dial
+3. Codemie
+4. Claude
+5. ChatGPT
+6. Gemini
+7. Other — please specify
+
+User can type the number or the name.
+
+**Q4 — Explanation**
+Free text: what did you use AI to do in this session?
+
+**Q5 — Role**
+Show the config default in brackets: `Role [Dev]? Press Enter to keep, or type to change.`
+Options: Dev / QA / DevOps / Support / Other (specify)
+If the user just presses Enter (or types nothing meaningful), use the config default.
+
+**Q6 — Helped with**
+Present as a numbered list — user types comma-separated numbers or names:
+1. Discovery
+2. Analysis
+3. Development
+4. Unit Testing
+5. Functional Testing
+6. Automation Testing
+7. Deployment
+8. Optimisation
+9. Troubleshooting
+
+e.g. `2, 3` → "Analysis, Development"
+
+**Q7 — Non-AI time**
+How long would this have taken without AI? (e.g. `30m`, `2h`, `half a day`)
 
 Hold all answers in memory. Build a list of entry objects in this shape (skipped sessions are not included):
 ```json
 [
   {
-    "task": "<user's answer>",
+    "task": "<Q1>",
+    "userStory": "<Q2>",
+    "tool": "<Q3 resolved to name>",
+    "explanation": "<Q4>",
+    "role": "<Q5>",
+    "helpedWith": "<Q6 resolved to comma-separated names>",
     "aiTime": "<from sessions output>",
-    "nonAiTime": "<user's answer>"
+    "nonAiTime": "<Q7>"
   }
 ]
 ```

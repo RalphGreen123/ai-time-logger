@@ -14,12 +14,11 @@ Track how long you spend working with AI each day, and estimate the time saved v
 ```markdown
 # AI Time Log — 17 Jun 2026
 
-| Name | Task | AI Time | Non-AI Time | Date |
-|------|------|---------|-------------|------|
-| Ralph Green | Morning briefing | 45m | 15m | 2026-06-17 |
-| Ralph Green | Build AI time logger skill | 1h 20m | 4h | 2026-06-17 |
+| Name | Tool | User Story | Task | Explanation | Role | Helped With | AI Time | Non-AI Time | Date |
+|------|------|------------|------|-------------|------|-------------|---------|-------------|------|
+| Ralph Green | Claude | DIGIX-86186 | Build data ingestion solution | Generated architecture options and evaluated trade-offs | Dev | Analysis, Development | 1h 20m | 4h | 2026-06-17 |
 
-**Total AI Time: 2h 05m**
+**Total AI Time: 1h 20m**
 ```
 
 ## Requirements
@@ -55,6 +54,7 @@ Edit `~/.ai-time-logger.json`:
 | Field | Required | Description |
 |-------|----------|-------------|
 | `userName` | Yes | Your name as it appears in the log table |
+| `role` | Yes | Your role: `Dev`, `QA`, `DevOps`, `Support`, or `Other — <name>`. Used as default, overridable per session. |
 | `useGitRepo` | No | Set `true` to use the repo's `logs/ai-time-log.md` as the shared log (recommended) |
 | `dailyLogDir` | No | Local directory for personal daily log files (one per day) |
 | `consolidatedLogPath` | No | Override the consolidated log path (only needed if not using Git repo mode) |

@@ -159,8 +159,11 @@ function writeCmd(opts) {
   // --consolidated CLI flag overrides config (used by SKILL.md for Git repo mode)
   const consolidatedLogPath = opts.consolidated || config.consolidatedLogPath;
 
+  const TABLE_HEADER = '| Name | Tool | User Story | Task | Explanation | Role | Helped With | AI Time | Non-AI Time | Date |';
+  const TABLE_SEP    = '|------|------|------------|------|-------------|------|-------------|---------|-------------|------|';
+
   const tableRows = entries.map(e =>
-    `| ${userName} | ${e.task} | ${e.aiTime} | ${e.nonAiTime} | ${date} |`
+    `| ${userName} | ${e.tool || ''} | ${e.userStory || 'N/A'} | ${e.task} | ${e.explanation || ''} | ${e.role || ''} | ${e.helpedWith || ''} | ${e.aiTime} | ${e.nonAiTime} | ${date} |`
   );
   const totalMinutes = entries.reduce((sum, e) => sum + parseTimeToMinutes(e.aiTime), 0);
   const totalAiTime = formatDuration(totalMinutes);
@@ -175,8 +178,8 @@ function writeCmd(opts) {
     const lines = [
       `# AI Time Log — ${dateDisplay}`,
       '',
-      '| Name | Task | AI Time | Non-AI Time | Date |',
-      '|------|------|---------|-------------|------|',
+      TABLE_HEADER,
+      TABLE_SEP,
       ...tableRows,
       '',
       `**Total AI Time: ${totalAiTime}**`,
@@ -196,8 +199,8 @@ function writeCmd(opts) {
       const header = [
         '# AI Time Log — Consolidated',
         '',
-        '| Name | Task | AI Time | Non-AI Time | Date |',
-        '|------|------|---------|-------------|------|',
+        TABLE_HEADER,
+        TABLE_SEP,
         '',
       ].join('\n');
       fs.writeFileSync(consolidatedLogPath, header, 'utf8');

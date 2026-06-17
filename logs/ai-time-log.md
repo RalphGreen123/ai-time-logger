@@ -1,4 +1,4 @@
 # AI Time Log — Consolidated
 
-| Name | Task | AI Time | Non-AI Time | Date |
-|------|------|---------|-------------|------|
+| Name | Tool | User Story | Task | Explanation | Role | Helped With | AI Time | Non-AI Time | Date |
+|------|------|------------|------|-------------|------|-------------|---------|-------------|------|
