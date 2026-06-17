@@ -1,6 +1,6 @@
 {
   "userName": "Your Name",
-  "dailyLogDir": "/path/to/your/local/ai-logs",
-  "consolidatedLogPath": "/path/to/shared/OneDrive/ai-time-log.md",
+  "useGitRepo": true,
+  "dailyLogDir": "/full/path/to/your/local/ai-logs",
   "idleThresholdMinutes": 15
 }

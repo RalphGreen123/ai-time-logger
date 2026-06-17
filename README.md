@@ -29,24 +29,25 @@ Track how long you spend working with AI each day, and estimate the time saved v
 
 ## Install
 
+Clone the repo **directly into your Claude Code skills directory** — this is important because the shared log lives in the repo itself:
+
 ```bash
-# 1. Clone the repo
-git clone https://github.com/<your-username>/ai-time-logger
-
-# 2. Copy the skill into your Claude Code skills directory
-cp -r ai-time-logger ~/.claude/skills/ai-time-logger
-
-# 3. Set up your config
-cp ai-time-logger/config.example.json ~/.ai-time-logger.json
+git clone https://github.com/<your-username>/ai-time-logger ~/.claude/skills/ai-time-logger
 ```
 
-Then edit `~/.ai-time-logger.json`:
+Then set up your personal config:
+
+```bash
+cp ~/.claude/skills/ai-time-logger/config.example.json ~/.ai-time-logger.json
+```
+
+Edit `~/.ai-time-logger.json`:
 
 ```json
 {
   "userName": "Your Name",
-  "dailyLogDir": "/path/to/your/local/ai-logs",
-  "consolidatedLogPath": "/path/to/shared/OneDrive/ai-time-log.md",
+  "useGitRepo": true,
+  "dailyLogDir": "/full/path/to/your/local/ai-logs",
   "idleThresholdMinutes": 15
 }
 ```
@@ -54,15 +55,21 @@ Then edit `~/.ai-time-logger.json`:
 | Field | Required | Description |
 |-------|----------|-------------|
 | `userName` | Yes | Your name as it appears in the log table |
-| `dailyLogDir` | No | Local directory for daily log files (one per day) |
-| `consolidatedLogPath` | No | Path to the shared consolidated log (OneDrive, SharePoint, etc.) |
+| `useGitRepo` | No | Set `true` to use the repo's `logs/ai-time-log.md` as the shared log (recommended) |
+| `dailyLogDir` | No | Local directory for personal daily log files (one per day) |
+| `consolidatedLogPath` | No | Override the consolidated log path (only needed if not using Git repo mode) |
 | `idleThresholdMinutes` | No | Minutes of inactivity before a gap stops counting (default: 15) |
 
-At least one of `dailyLogDir` or `consolidatedLogPath` must be set.
+> **Note:** Use full absolute paths — JSON does not expand `~`. Use `/Users/yourname/...` on Mac/Linux.
 
-> **Note:** Use full absolute paths in the config — JSON does not expand `~`. Use `/Users/yourname/...` on Mac/Linux or `C:\Users\yourname\...` on Windows.
+Restart Claude Code. The skill is now available.
 
-4. Restart Claude Code. The skill is now available.
+### How the shared log works
+
+- The consolidated log lives at `logs/ai-time-log.md` in this repo
+- Each time you log, the skill pulls the latest version, appends your rows, commits, and pushes
+- Everyone on the team clones the same repo, so the table grows as each person logs their time
+- If two people push at the same time: `git pull --rebase && git push` resolves it
 
 ## Usage
 

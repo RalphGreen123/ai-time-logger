@@ -156,7 +156,8 @@ function writeCmd(opts) {
   const date = opts.date || localDateString(Date.now());
   const userName = config.userName || 'Unknown';
   const dailyLogDir = config.dailyLogDir;
-  const consolidatedLogPath = config.consolidatedLogPath;
+  // --consolidated CLI flag overrides config (used by SKILL.md for Git repo mode)
+  const consolidatedLogPath = opts.consolidated || config.consolidatedLogPath;
 
   const tableRows = entries.map(e =>
     `| ${userName} | ${e.task} | ${e.aiTime} | ${e.nonAiTime} | ${date} |`

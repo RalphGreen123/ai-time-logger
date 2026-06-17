@@ -10,7 +10,7 @@ description: >
   collects a task name and non-AI time estimate for each session, then writes a
   daily log file and appends to a shared consolidated log.
 allowed-tools: [Bash, Read, Write]
-version: 1.0.0
+version: 1.1.0
 ---
 
 # AI Time Logger
@@ -18,6 +18,10 @@ version: 1.0.0
 This skill logs your AI productivity impact by reading your Claude Code session
 history, calculating active time, and writing a structured Markdown table that
 you and your team can use to track AI vs non-AI effort.
+
+The shared consolidated log lives in this skill's Git repository — everyone on
+the team clones the repo once, and each log entry is committed and pushed so the
+table stays in sync across the team.
 
 ---
 
@@ -38,13 +42,25 @@ If the file is missing, tell the user:
 > cp ~/.claude/skills/ai-time-logger/config.example.json ~/.ai-time-logger.json
 > ```
 >
-> Then edit it with your `userName`, `dailyLogDir`, and `consolidatedLogPath`, and run the command again.
+> Then edit it with your `userName` and optionally `dailyLogDir`, and run the command again.
 
 Stop.
 
 ---
 
-## Step 2 — Get today's sessions
+## Step 2 — Pull latest from Git
+
+If the skill directory is a Git repo (check with `git -C $HOME/.claude/skills/ai-time-logger status`), pull before writing so the consolidated log is up to date:
+
+```bash
+git -C $HOME/.claude/skills/ai-time-logger pull
+```
+
+If pull fails (e.g. no remote configured yet), warn the user but continue — do not stop.
+
+---
+
+## Step 3 — Get today's sessions
 
 Run:
 
@@ -58,7 +74,7 @@ If the command fails, show the error and stop.
 
 ---
 
-## Step 3 — Present sessions and collect task info
+## Step 4 — Present sessions and collect task info
 
 For each session object in the JSON array, present it to the user clearly:
 
@@ -89,34 +105,65 @@ Hold all answers in memory. Build a list of entry objects in this shape:
 
 ---
 
-## Step 4 — Write the log
+## Step 5 — Write the log
 
 Once all sessions are named, write the entries to a temp file and call the write subcommand.
 
-**4a.** Use the Write tool to create `/tmp/ai-time-entries.json` with the entries array you built in Step 3.
+**5a.** Use the Write tool to create `/tmp/ai-time-entries.json` with the entries array you built in Step 4.
 
-**4b.** Run:
+**5b.** Resolve the consolidated log path. If config has `"useGitRepo": true` (or the key is absent and the skill dir is a git repo), use:
+
+```
+$HOME/.claude/skills/ai-time-logger/logs/ai-time-log.md
+```
+
+Otherwise use `consolidatedLogPath` from config.
+
+**5c.** Run:
 
 ```bash
 node $HOME/.claude/skills/ai-time-logger/scripts/ai-time-logger.js write \
   --config ~/.ai-time-logger.json \
-  --entries-file /tmp/ai-time-entries.json
+  --entries-file /tmp/ai-time-entries.json \
+  --consolidated $HOME/.claude/skills/ai-time-logger/logs/ai-time-log.md
 ```
+
+(Omit `--consolidated` if using `consolidatedLogPath` from config instead.)
 
 If the command fails, show the error message to the user.
 
 ---
 
-## Step 5 — Confirm
+## Step 6 — Commit and push
 
-Parse the JSON output from Step 4b and report to the user:
+If the skill directory is a Git repo, commit the updated consolidated log and push:
+
+```bash
+git -C $HOME/.claude/skills/ai-time-logger add logs/ai-time-log.md
+git -C $HOME/.claude/skills/ai-time-logger commit -m "AI time log: $(date +%Y-%m-%d) — [userName]"
+git -C $HOME/.claude/skills/ai-time-logger push
+```
+
+Replace `[userName]` with the value from config.
+
+If push fails, tell the user:
+> Push failed — someone may have pushed since your pull. Run:
+> ```bash
+> git -C ~/.claude/skills/ai-time-logger pull --rebase && git -C ~/.claude/skills/ai-time-logger push
+> ```
+
+---
+
+## Step 7 — Confirm
+
+Parse the JSON output from Step 5c and report to the user:
 
 > Logged **[sessionsLogged] sessions** — **[totalAiTime] total AI time** today.
 >
 > - Daily log: `[dailyPath]`
-> - Consolidated log updated: `[consolidatedPath]`
+> - Consolidated log pushed to Git ✓
 
-If `dailyPath` or `consolidatedPath` is null (not configured), omit that line.
+If `dailyPath` is null (not configured), omit that line.
 
 ---
 
